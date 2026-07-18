@@ -4,7 +4,7 @@ const { Bot } = require("grammy");
 
 // ================= CONFIG =================
 
-const BOT_TOKEN = "YOUR_BOT_TOKEN_HERE";
+const BOT_TOKEN = "8864343192:AAFM225_OiQphPDwq2TQn1zAKwe-p1kFJEg";
 
 const WELCOME_TEXT = (name) => `
 🎉 Welcome ${name}! 🎉
@@ -12,7 +12,7 @@ const WELCOME_TEXT = (name) => `
 🎁 Gift Codes & Bonus sirf Register Users ke liye hain.
 
 🔗 Register Link:
-https://www.ts77777.online/#/register?invitationCode=324515976095
+https://www.ts777.online/#/register?invitationCode=324515976095
 
 ✅ Register karein aur Gift Codes + Bonus ka fayda uthayein.
 
@@ -29,12 +29,12 @@ bot.on("chat_join_request", async (ctx) => {
   const chat = ctx.chatJoinRequest.chat;
 
   try {
-    // Join request approve
+    // Auto approve join request
     await ctx.api.approveChatJoinRequest(chat.id, user.id);
 
     console.log(`Approved: ${user.id} (${user.first_name})`);
 
-    // Welcome DM
+    // Send welcome DM
     try {
       await ctx.api.sendMessage(
         user.id,
