@@ -1,60 +1,51 @@
-// Telegram Channel Join Request Welcome Bot (using grammY)
+const TelegramBot = require('node-telegram-bot-api');
 
-const { Bot } = require("grammy");
+// DEMO TOKEN
+const token = "8864343192:AAFM225_OiQphPDwq2TQn1zAKwe-p1kFJEg";
 
-// ================= CONFIG =================
+const bot = new TelegramBot(token, { polling: true });
 
-const BOT_TOKEN = "8864343192:AAFM225_OiQphPDwq2TQn1zAKwe-p1kFJEg";
+console.log("Bot started. Waiting for channel join requests...");
 
-const WELCOME_TEXT = (name) => `
-🎉 Welcome ${name}! 🎉
+// Join Request
+bot.on("chat_join_request", async (req) => {
+  const chatId = req.chat.id;
+  const userId = req.from.id;
+  const userName = req.from.first_name || "Friend";
+
+  try {
+    // Auto Approve
+    await bot.approveChatJoinRequest(chatId, userId);
+    console.log(`Approved: ${userId} (${userName})`);
+
+    // Welcome DM
+    try {
+      await bot.sendMessage(
+        userId,
+`🎉 Welcome ${userName}! 🎉
 
 🎁 Gift Codes & Bonus sirf Register Users ke liye hain.
 
 🔗 Register Link:
-https://www.ts777.online/#/register?invitationCode=324515976095
+https://www.ts77777.online/#/register?invitationCode=324515976095
 
 ✅ Register karein aur Gift Codes + Bonus ka fayda uthayein.
 
 💬 Koi bhi help chahiye ho to message karein.
-👉 @MissKajal 😊
-`;
-
-// ==========================================
-
-const bot = new Bot(BOT_TOKEN);
-
-bot.on("chat_join_request", async (ctx) => {
-  const user = ctx.chatJoinRequest.from;
-  const chat = ctx.chatJoinRequest.chat;
-
-  try {
-    // Auto approve join request
-    await ctx.api.approveChatJoinRequest(chat.id, user.id);
-
-    console.log(`Approved: ${user.id} (${user.first_name})`);
-
-    // Send welcome DM
-    try {
-      await ctx.api.sendMessage(
-        user.id,
-        WELCOME_TEXT(user.first_name || "Friend")
+👉 @MissKajal 😊`
       );
 
-      console.log(`Welcome message sent to ${user.id}`);
-    } catch (err) {
-      console.log("DM could not be sent:", err.message);
+      console.log(`DM sent to ${userId}`);
+    } catch (dmError) {
+      console.warn(`DM could not be sent: ${dmError.message}`);
     }
 
   } catch (err) {
-    console.error("Approve failed:", err.message);
+    console.error(`Approve failed: ${err.message}`);
   }
 });
 
-bot.catch((err) => {
-  console.error("Bot error:", err);
+// Polling Error
+bot.on("polling_error", (err) => {
+  console.error("Polling Error:", err.message);
 });
-
-bot.start();
-
-console.log("Bot started. Waiting for channel join requests...");
