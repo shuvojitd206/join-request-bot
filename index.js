@@ -1,51 +1,44 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-// DEMO TOKEN
-const token = "8864343192:AAFM225_OiQphPDwq2TQn1zAKwe-p1kFJEg";
+// TEMPORARY: token hardcoded for quick testing. Isse jaldi environment variable mein move karo aur BotFather se revoke/regenerate karo.
+const token = process.env.BOT_TOKEN || '8864343192:AAFaLevCaCb3mfdQfYAxmfNxvextJomEdJs';
 
-const bot = new TelegramBot(token, { polling: true });
-
-console.log("Bot started. Waiting for channel join requests...");
-
-// Join Request
-bot.on("chat_join_request", async (req) => {
-  const chatId = req.chat.id;
-  const userId = req.from.id;
-  const userName = req.from.first_name || "Friend";
-
-  try {
-    // Auto Approve
-    await bot.approveChatJoinRequest(chatId, userId);
-    console.log(`Approved: ${userId} (${userName})`);
-
-    // Welcome DM
-    try {
-      await bot.sendMessage(
-        userId,
-`🎉 Welcome ${userName}! 🎉
-
-🎁 Gift Codes & Bonus sirf Register Users ke liye hain.
-
-🔗 Register Link:
-https://www.ts77777.online/#/register?invitationCode=324515976095
-
-✅ Register karein aur Gift Codes + Bonus ka fayda uthayein.
-
-💬 Koi bhi help chahiye ho to message karein.
-👉 @MissKajal 😊`
-      );
-
-      console.log(`DM sent to ${userId}`);
-    } catch (dmError) {
-      console.warn(`DM could not be sent: ${dmError.message}`);
+const bot = new TelegramBot(token, {
+  polling: {
+    params: {
+      // Ye batana zaroori hai warna Telegram chat_join_request event bhejta hi nahi
+      allowed_updates: ['message', 'chat_join_request']
     }
-
-  } catch (err) {
-    console.error(`Approve failed: ${err.message}`);
   }
 });
 
-// Polling Error
-bot.on("polling_error", (err) => {
-  console.error("Polling Error:", err.message);
+console.log('Bot started. Waiting for channel join requests...');
+
+// Jab koi user group/channel join request bhejta hai
+bot.on('chat_join_request', async (req) => {
+  const chatId = req.chat.id;
+  const userId = req.from.id;
+  const userName = req.from.first_name || 'there';
+
+  console.log(`Join request aayi: ${userId} (${userName}) chat ${chatId} se`);
+
+  // Sirf DM bhejo, approve mat karo
+  try {
+    await bot.sendMessage(
+      userId,
+      `🎉 Welcome ${userName}! Your content is ready 👇`
+    );
+    console.log(`DM sent to ${userId}`);
+  } catch (dmError) {
+    // Yahan poora error object log karo taaki exact wajah pata chale
+    console.error(`DM FAILED for ${userId}: ${dmError.message}`);
+    if (dmError.response && dmError.response.body) {
+      console.error('Telegram response:', JSON.stringify(dmError.response.body));
+    }
+  }
+});
+
+// Kisi bhi tarah ki polling error ko crash hone se bachao
+bot.on('polling_error', (err) => {
+  console.error('Polling error:', err.message);
 });
