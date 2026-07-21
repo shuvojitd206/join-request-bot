@@ -1,12 +1,10 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-// TEMPORARY: token hardcoded for quick testing. Isse jaldi environment variable mein move karo aur BotFather se revoke/regenerate karo.
-const token = process.env.BOT_TOKEN || '8864343192:AAEYxhAxjdVAbU2HyTULILfhxXvbUGOq_2E';
+const token = process.env.BOT_TOKEN || '8845040943:AAF1VA_2cXRQHmFZN0lmERkHlUxkFFKHxN8';
 
 const bot = new TelegramBot(token, {
   polling: {
     params: {
-      // Ye batana zaroori hai warna Telegram chat_join_request event bhejta hi nahi
       allowed_updates: ['message', 'chat_join_request']
     }
   }
@@ -22,43 +20,47 @@ bot.on('chat_join_request', async (req) => {
 
   console.log(`Join request aayi: ${userId} (${userName}) chat ${chatId} se`);
 
-  // Sirf DM bhejo, approve mat karo
   try {
-  await bot.sendMessage(
-  userId,
-  `🎉 Welcome to VIP Team! 💯
+    // 1️⃣ Welcome Message
+    await bot.sendMessage(
+      userId,
+      `🎉 Welcome to VIP Team! 💯
 
 🔗 Registration Link:
-https://www.ts77777.online/#/register?invitationCode=324515976095
+https://www.ts777.online/#/register?invitationCode=324515976095
 
 ✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
-);
+    );
 
-await bot.sendDocument(userId, "./ITHESHBHAI.apk", {
-  caption: "📲 Download App"
-});
+    // 2️⃣ APK File
+    await bot.sendDocument(userId, "./ITHESHBHAI.apk", {
+      caption: "📲 Download App"
+    });
 
-await bot.sendVoice(userId, "./newaudio.ogg");
+    // 3️⃣ Voice Note
+    await bot.sendVoice(userId, "./newaudio.ogg");
 
-await bot.sendMessage(
-  userId,
-  "✅ Deposit karke Screenshot Send karo."
-);
-} 
-  catch (err) {
-  console.error(err);
-}
+    // 4️⃣ Final Message
+    await bot.sendMessage(
+      userId,
+      "✅ Deposit karke Screenshot Send karo."
+    );
+
     console.log(`DM sent to ${userId}`);
+
   } catch (dmError) {
-    // Yahan poora error object log karo taaki exact wajah pata chale
     console.error(`DM FAILED for ${userId}: ${dmError.message}`);
+
     if (dmError.response && dmError.response.body) {
-      console.error('Telegram response:', JSON.stringify(dmError.response.body));
+      console.error(
+        'Telegram response:',
+        JSON.stringify(dmError.response.body)
+      );
     }
   }
 });
 
-// Kisi bhi tarah ki polling error ko crash hone se bachao
+// Polling error
 bot.on('polling_error', (err) => {
   console.error('Polling error:', err.message);
 });
