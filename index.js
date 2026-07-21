@@ -1,66 +1,93 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-const token = process.env.BOT_TOKEN || '8845040943:AAF1VA_2cXRQHmFZN0lmERkHlUxkFFKHxN8';
+const TOKEN = '8845040943:AAF1VA_2cXRQHmFZN0lmERkHlUxkFFKHxN8';
+const ADMIN_ID = YOUR_ADMIN_CHAT_ID;
 
-const bot = new TelegramBot(token, {
-  polling: {
-    params: {
-      allowed_updates: ['message', 'chat_join_request']
-    }
-  }
-});
+const bot = new TelegramBot(TOKEN, { polling: true });
 
-console.log('Bot started. Waiting for channel join requests...');
+const userMap = {};
 
-// Jab koi user group/channel join request bhejta hai
-bot.on('chat_join_request', async (req) => {
-  const chatId = req.chat.id;
-  const userId = req.from.id;
-  const userName = req.from.first_name || 'there';
+bot.onText(/\/start/, async (msg) => {
+  const chatId = msg.chat.id;
 
-  console.log(`Join request aayi: ${userId} (${userName}) chat ${chatId} se`);
-
-  try {
-    // 1️⃣ Welcome Message
-    await bot.sendMessage(
-      userId,
-      `🎉 Welcome to VIP Team! 💯
+  await bot.sendMessage(
+    chatId,
+    `🎉 Welcome to VIP Team! 💯
 
 🔗 Registration Link:
-https://www.ts777.online/#/register?invitationCode=324515976095
+https://www.ts77777.online/#/register?invitationCode=324515976095
 
 ✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
-    );
+  );
 
-    // 2️⃣ APK File
-    await bot.sendDocument(userId, "./ITHESHBHAI.apk", {
-      caption: "📲 Download App"
-    });
+  await bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
+    caption: "📲 Download App"
+  });
 
-    // 3️⃣ Voice Note
-    await bot.sendVoice(userId, "./newaudio.ogg");
+  await bot.sendVoice(chatId, "./newaudio.ogg");
 
-    // 4️⃣ Final Message
-    await bot.sendMessage(
-      userId,
-      "✅ Deposit karke Screenshot Send karo."
-    );
-
-    console.log(`DM sent to ${userId}`);
-
-  } catch (dmError) {
-    console.error(`DM FAILED for ${userId}: ${dmError.message}`);
-
-    if (dmError.response && dmError.response.body) {
-      console.error(
-        'Telegram response:',
-        JSON.stringify(dmError.response.body)
-      );
-    }
-  }
+  await bot.sendMessage(
+    chatId,
+    "✅ Deposit karke Screenshot Send karo."
+  );
 });
 
-// Polling error
-bot.on('polling_error', (err) => {
-  console.error('Polling error:', err.message);
+bot.on('chat_join_request', async (req) => {
+  const chatId = req.from.id;
+
+  await bot.sendMessage(
+    chatId,
+    `🎉 Welcome to VIP Team! 💯
+
+🔗 Registration Link:
+https://www.ts77777.online/#/register?invitationCode=324515976095
+
+✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
+  );
+
+  await bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
+    caption: "📲 Download App"
+  });
+
+  await bot.sendVoice(chatId, "./newaudio.ogg");
+
+  await bot.sendMessage(
+    chatId,
+    "✅ Deposit karke Screenshot Send karo."
+  );
+});
+
+bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+
+  if (chatId === ADMIN_ID) {
+    if (msg.text && msg.text.startsWith('/start')) return;
+
+    if (msg.reply_to_message) {
+      const repliedId = msg.reply_to_message.message_id;
+      const targetUserId = userMap[repliedId];
+
+      if (targetUserId) {
+        bot.sendMessage(targetUserId, msg.text);
+      } else {
+        bot.sendMessage(ADMIN_ID, 'Ye message kis user ka hai pata nahi chal raha, sahi message pe reply karo.');
+      }
+    }
+    return;
+  }
+
+  if (msg.text && msg.text.startsWith('/start')) return;
+
+  const userName = msg.from.first_name || 'User';
+  const username = msg.from.username ? `@${msg.from.username}` : 'No username';
+
+  const forwardText = `📩 New message\n👤 ${userName} (${username})\n🆔 ${chatId}\n\n${msg.text}`;
+
+  bot.sendMessage(ADMIN_ID, forwardText).then((sentMsg) => {
+    userMap[sentMsg.message_id] = chatId;
+  });
+});
+
+bot.on('polling_error', (error) => {
+  console.log(error.message);
 });
