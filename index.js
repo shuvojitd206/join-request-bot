@@ -1,119 +1,133 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-const TOKEN = '8845040943:AAF1VA_2cXRQHmFZN0lmERkHlUxkFFKHxN8';
-const ADMIN_ID = 8213349474;
+// Token env variable se lo, ya seedha yahan daal do (sirf testing ke liye)
+const token = process.env.BOT_TOKEN || '8845040943:AAG9KEk6JqbMWpjRgH5Whl9Jy5ZM6RWSclw';
 
-const bot = new TelegramBot(TOKEN, { polling: true });
+if (!token || token === 'YOUR BOT TOKEN') {
+  console.error('BOT_TOKEN set nahi hai. Env variable set karo ya upar wali line mein token daalo.');
+  process.exit(1);
+}
 
-const userMap = {};
-
-bot.onText(/\/start/, (msg) => {
-  const chatId = msg.chat.id;
-
-  const welcomeMessage = `🎉 Welcome to VIP Team! 💯
-
-🔗 Registration Link:
-https://www.ts77777.online/#/register?invitationCode=324515976095
-
-✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`;
-
-  bot.sendMessage(chatId, welcomeMessage).catch((err) => {
-    console.log(err.message);
-  });
-
-  bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
-    caption: "📲 Download App"
-  }).catch((err) => {
-    console.log(err.message);
-  });
-
-  bot.sendVoice(chatId, "./newaudio.ogg").catch((err) => {
-    console.log(err.message);
-  });
-
-  bot.sendMessage(chatId, "✅ Deposit karke Screenshot Send karo.").catch((err) => {
-    console.log(err.message);
-  });
+const bot = new TelegramBot(token, {
+  polling: {
+    params: {
+      // Ye batana zaroori hai warna Telegram chat_join_request event bhejta hi nahi
+      allowed_updates: ['message', 'chat_join_request']
+    }
+  }
 });
 
-bot.on('chat_join_request', (req) => {
-  const chatId = req.from.id;
+console.log('Bot started. Waiting for messages and channel join requests...');
 
-  const joinMessage = `🎉 Welcome to VIP Team! 💯
+// Jab koi user group/channel join request bhejta hai
+bot.on('chat_join_request', async (req) => {
+  const chatId = req.chat.id;
+  const userId = req.from.id;
+  const userName = req.from.first_name || 'there';
+
+  console.log(Join request aayi: ${userId} (${userName}) chat ${chatId} se);
+
+try {
+  await bot.sendMessage(
+    userId,
+    🎉 Welcome to VIP Team! 💯
 
 🔗 Registration Link:
-https://www.ts77777.online/#/register?invitationCode=324515976095
+https://www.ts777.online/#/register?invitationCode=324515976095
 
-✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`;
+✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀
+  );
 
-  bot.sendMessage(chatId, joinMessage).catch((err) => {
-    console.log(err.message);
-  });
-
-  bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
+  await bot.sendDocument(userId, "./ITHESH VIP PANEL.apk", {
     caption: "📲 Download App"
-  }).catch((err) => {
-    console.log(err.message);
   });
 
-  bot.sendVoice(chatId, "./newaudio.ogg").catch((err) => {
-    console.log(err.message);
-  });
+  await bot.sendVoice(userId, "./newaudio.ogg");
 
-  bot.sendMessage(chatId, "✅ Deposit karke Screenshot Send karo.").catch((err) => {
-    console.log(err.message);
-  });
+  await bot.sendMessage(
+    userId,
+    "✅ Deposit karke Screenshot Send karo."
+  );
+
+  console.log(DM sent to ${userId});
+} catch (dmError) {
+    console.error(DM FAILED for ${userId}: ${dmError.message});
+    if (dmError.response && dmError.response.body) {
+      console.error('Telegram response:', JSON.stringify(dmError.response.body));
+    }
+  }
 });
 
-bot.on('message', (msg) => {
+// Yahan apni admin/owner Chat ID daalo (jaha messages forward honge)
+// @userinfobot ko message karke apni ID nikal lo
+const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID || '8213349474';
+
+// User -> Admin message ka mapping, taaki admin ke reply ko sahi user tak bhej sakein
+// Key: admin ke paas forward hue message ka ID, Value: original user ki chat ID
+const forwardMap = new Map();
+
+bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
+  const userName = msg.from.first_name || 'there';
+  const text = msg.text;
 
-  if (chatId === ADMIN_ID) {
-    if (msg.text && msg.text.startsWith('/start')) return;
+  console.log(Message aaya: ${userName} (${chatId}) - "${text}");
 
-    if (msg.reply_to_message) {
-      const repliedId = msg.reply_to_message.message_id;
-      const targetUserId = userMap[repliedId];
+  // Case 1: Admin kisi forwarded message ko reply kar raha hai
+  if (String(chatId) === String(ADMIN_CHAT_ID) && msg.reply_to_message) {
+    const repliedMsgId = msg.reply_to_message.message_id;
+    const originalUserChatId = forwardMap.get(repliedMsgId);
 
-      if (targetUserId) {
-        bot.sendMessage(targetUserId, msg.text).catch((err) => {
-          console.log(err.message);
-        });
-      } else {
-        bot.sendMessage(
-          ADMIN_ID,
-          'Ye message kis user ka hai pata nahi chal raha, sahi message pe reply karo.'
-        ).catch((err) => {
-          console.log(err.message);
-        });
+    if (originalUserChatId) {
+      try {
+        await bot.sendMessage(originalUserChatId, text);
+        console.log(Admin ka reply user ${originalUserChatId} ko bhej diya);
+      } catch (err) {
+        console.error(User ko reply bhejne mein error: ${err.message});
       }
+    } else {
+      console.log('Yeh reply kisi tracked message ka nahi tha, ignore kar diya');
     }
     return;
   }
 
-  if (msg.text && msg.text.startsWith('/start')) return;
+  // Case 2: Koi normal user message bhej raha hai -> admin ko forward karo
+  if (String(chatId) !== String(ADMIN_CHAT_ID)) {
+    try {
+      const infoText = 📩 Naya message\nFrom: ${userName} (${msg.from.username ? '@' + msg.from.username : 'no username'})\nChat ID: ${chatId};
+      await bot.sendMessage(ADMIN_CHAT_ID, infoText);
+      const forwarded = await bot.forwardMessage(ADMIN_CHAT_ID, chatId, msg.message_id);
 
-  const userName = msg.from.first_name || 'User';
-  const username = msg.from.username ? `@${msg.from.username}` : 'No username';
-
-  const forwardText = `📩 New message\n👤 ${userName} (${username})\n🆔 ${chatId}\n\n${msg.text}`;
-
-  bot.sendMessage(ADMIN_ID, forwardText).then((sentMsg) => {
-    userMap[sentMsg.message_id] = chatId;
-  }).catch((err) => {
-    console.log(err.message);
-  });
+      // Is forwarded message ke ID ko user ki chat ID se map kar do
+      forwardMap.set(forwarded.message_id, chatId);
+    } catch (err) {
+      console.error(Admin ko forward karne mein error: ${err.message});
+    }
+  }
 });
 
-bot.on('polling_error', (error) => {
-  console.log(error.message);
+// Kisi bhi tarah ki polling error ko crash hone se bachao
+bot.on('polling_error', (err) => {
+  console.error('Polling error:', err.message);
 });
 
-process.on('unhandledRejection', (err) => {
-  console.log('Unhandled Rejection:', err.message);
-});  console.log(error.message);
-});
+// Graceful shutdown: Railway restart/redeploy karte waqt purana polling connection
+// poori tarah band karo, warna naya instance 409 conflict dega
+let isShuttingDown = false;
 
-process.on('unhandledRejection', (err) => {
-  console.log('Unhandled Rejection:', err.message);
-});
+async function shutdown(signal) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  console.log(${signal} mila, bot ko gracefully band kar rahe hain...);
+  try {
+    await bot.stopPolling();
+    console.log('Polling successfully stop ho gayi.');
+  } catch (err) {
+    console.error('Polling stop karte waqt error:', err.message);
+  } finally {
+    process.exit(0);
+  }
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
