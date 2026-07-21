@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 
 const TOKEN = '8845040943:AAF1VA_2cXRQHmFZN0lmERkHlUxkFFKHxN8';
-const ADMIN_ID = YOUR_ADMIN_CHAT_ID;
+const ADMIN_ID = 8213349474;
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
