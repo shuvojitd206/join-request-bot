@@ -1,68 +1,68 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-const TOKEN = '8845040943:AAF1VA_2cXRQHmFZN0lmERkHlUxkFFKHxN8';
+const TOKEN = 'YOUR_BOT_TOKEN_HERE';
 const ADMIN_ID = 8213349474;
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 const userMap = {};
 
-bot.onText(/\/start/, async (msg) => {
+bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
 
-  try {
-    await bot.sendMessage(
-      chatId,
-      `🎉 Welcome to VIP Team! 💯
+  const welcomeMessage = `🎉 Welcome to VIP Team! 💯
 
 🔗 Registration Link:
 https://www.ts77777.online/#/register?invitationCode=324515976095
 
-✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
-    );
+✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`;
 
-    await bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
-      caption: "📲 Download App"
-    });
-
-    await bot.sendVoice(chatId, "./newaudio.ogg");
-
-    await bot.sendMessage(
-      chatId,
-      "✅ Deposit karke Screenshot Send karo."
-    );
-  } catch (err) {
+  bot.sendMessage(chatId, welcomeMessage).catch((err) => {
     console.log(err.message);
-  }
+  });
+
+  bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
+    caption: "📲 Download App"
+  }).catch((err) => {
+    console.log(err.message);
+  });
+
+  bot.sendVoice(chatId, "./newaudio.ogg").catch((err) => {
+    console.log(err.message);
+  });
+
+  bot.sendMessage(chatId, "✅ Deposit karke Screenshot Send karo.").catch((err) => {
+    console.log(err.message);
+  });
 });
 
-bot.on('chat_join_request', async (req) => {
+bot.on('chat_join_request', (req) => {
   const chatId = req.from.id;
 
-  try {
-    await bot.sendMessage(
-      chatId,
-      `🎉 Welcome to VIP Team! 💯
+  const joinMessage = `🎉 Welcome to VIP Team! 💯
 
 🔗 Registration Link:
 https://www.ts77777.online/#/register?invitationCode=324515976095
 
-✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
-    );
+✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`;
 
-    await bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
-      caption: "📲 Download App"
-    });
-
-    await bot.sendVoice(chatId, "./newaudio.ogg");
-
-    await bot.sendMessage(
-      chatId,
-      "✅ Deposit karke Screenshot Send karo."
-    );
-  } catch (err) {
+  bot.sendMessage(chatId, joinMessage).catch((err) => {
     console.log(err.message);
-  }
+  });
+
+  bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
+    caption: "📲 Download App"
+  }).catch((err) => {
+    console.log(err.message);
+  });
+
+  bot.sendVoice(chatId, "./newaudio.ogg").catch((err) => {
+    console.log(err.message);
+  });
+
+  bot.sendMessage(chatId, "✅ Deposit karke Screenshot Send karo.").catch((err) => {
+    console.log(err.message);
+  });
 });
 
 bot.on('message', (msg) => {
@@ -107,6 +107,11 @@ bot.on('message', (msg) => {
 
 bot.on('polling_error', (error) => {
   console.log(error.message);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.log('Unhandled Rejection:', err.message);
+});  console.log(error.message);
 });
 
 process.on('unhandledRejection', (err) => {
