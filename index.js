@@ -10,51 +10,59 @@ const userMap = {};
 bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
 
-  await bot.sendMessage(
-    chatId,
-    `🎉 Welcome to VIP Team! 💯
+  try {
+    await bot.sendMessage(
+      chatId,
+      `🎉 Welcome to VIP Team! 💯
 
 🔗 Registration Link:
 https://www.ts77777.online/#/register?invitationCode=324515976095
 
 ✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
-  );
+    );
 
-  await bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
-    caption: "📲 Download App"
-  });
+    await bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
+      caption: "📲 Download App"
+    });
 
-  await bot.sendVoice(chatId, "./newaudio.ogg");
+    await bot.sendVoice(chatId, "./newaudio.ogg");
 
-  await bot.sendMessage(
-    chatId,
-    "✅ Deposit karke Screenshot Send karo."
-  );
+    await bot.sendMessage(
+      chatId,
+      "✅ Deposit karke Screenshot Send karo."
+    );
+  } catch (err) {
+    console.log(err.message);
+  }
 });
 
 bot.on('chat_join_request', async (req) => {
   const chatId = req.from.id;
 
-  await bot.sendMessage(
-    chatId,
-    `🎉 Welcome to VIP Team! 💯
+  try {
+    await bot.sendMessage(
+      chatId,
+      `🎉 Welcome to VIP Team! 💯
 
 🔗 Registration Link:
 https://www.ts77777.online/#/register?invitationCode=324515976095
 
 ✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
-  );
+    );
 
-  await bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
-    caption: "📲 Download App"
-  });
+    await bot.sendDocument(chatId, "./ITHESHBHAI.apk", {
+      caption: "📲 Download App"
+    });
 
-  await bot.sendVoice(chatId, "./newaudio.ogg");
+    await bot.sendVoice(chatId, "./newaudio.ogg");
 
-  await bot.sendMessage(
-    chatId,
-    "✅ Deposit karke Screenshot Send karo."
-  );
+    await bot.sendMessage(
+      chatId,
+      "✅ Deposit karke Screenshot Send karo."
+    );
+  } catch (err) {
+    console.log(err.message);
+  }
 });
 
 bot.on('message', (msg) => {
@@ -68,9 +76,16 @@ bot.on('message', (msg) => {
       const targetUserId = userMap[repliedId];
 
       if (targetUserId) {
-        bot.sendMessage(targetUserId, msg.text);
+        bot.sendMessage(targetUserId, msg.text).catch((err) => {
+          console.log(err.message);
+        });
       } else {
-        bot.sendMessage(ADMIN_ID, 'Ye message kis user ka hai pata nahi chal raha, sahi message pe reply karo.');
+        bot.sendMessage(
+          ADMIN_ID,
+          'Ye message kis user ka hai pata nahi chal raha, sahi message pe reply karo.'
+        ).catch((err) => {
+          console.log(err.message);
+        });
       }
     }
     return;
@@ -85,9 +100,15 @@ bot.on('message', (msg) => {
 
   bot.sendMessage(ADMIN_ID, forwardText).then((sentMsg) => {
     userMap[sentMsg.message_id] = chatId;
+  }).catch((err) => {
+    console.log(err.message);
   });
 });
 
 bot.on('polling_error', (error) => {
   console.log(error.message);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.log('Unhandled Rejection:', err.message);
 });
