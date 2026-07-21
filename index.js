@@ -24,10 +24,34 @@ bot.on('chat_join_request', async (req) => {
 
   // Sirf DM bhejo, approve mat karo
   try {
-    await bot.sendMessage(
-      userId,
-      `🎉 Welcome ${userName}! Your content is ready 👇`
-    );
+  // 1️⃣ Welcome Message
+  await bot.sendMessage(
+    userId,
+    `🎉 Welcome to VIP Team! 💯
+
+🔗 Registration Link:
+https://www.ts77777.online/#/register?invitationCode=324515976095
+
+✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
+  );
+
+  // 2️⃣ APK File
+  await bot.sendDocument(userId, "./ITHESHBHAI.apk", {
+    caption: "📲 Download App"
+  });
+
+  // 3️⃣ Voice Guide
+  await bot.sendVoice(userId, "./newaudio.ogg");
+
+  // 4️⃣ Final Message
+  await bot.sendMessage(
+    userId,
+    "✅ Deposit karke Screenshot Send karo."
+  );
+
+} catch (err) {
+  console.error(err);
+}
     console.log(`DM sent to ${userId}`);
   } catch (dmError) {
     // Yahan poora error object log karo taaki exact wajah pata chale
