@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 
 // TEMPORARY: token hardcoded for quick testing. Isse jaldi environment variable mein move karo aur BotFather se revoke/regenerate karo.
-const token = process.env.BOT_TOKEN || '8864343192:AAFaLevCaCb3mfdQfYAxmfNxvextJomEdJs';
+const token = process.env.BOT_TOKEN || '8864343192:AAEYxhAxjdVAbU2HyTULILfhxXvbUGOq_2E';
 
 const bot = new TelegramBot(token, {
   polling: {
