@@ -27,43 +27,30 @@ bot.on('chat_join_request', async (req) => {
 
   console.log(`Join request aayi: ${userId} (${userName}) chat ${chatId} se`);
 
-  try {
+try {
   await bot.sendMessage(
     userId,
-    `<b>
-🎉 Welcome To Team Danish 💯
+    `🎉 Welcome to VIP Team! 💯
 
 🔗 Registration Link:
 https://www.ts777.online/#/register?invitationCode=324515976095
 
-✔️ Register karke Deposit karo aur Screenshot bhej do.
-
-Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀
-</b>`,
-    {
-      parse_mode: "HTML"
-    }
+✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
   );
 
   await bot.sendDocument(userId, "./ITHESH VIP PANEL.apk", {
-    caption: `<b>📥 Download KarLo Is File Ko.</b>`,
-    parse_mode: "HTML"
+    caption: "📲 Download App"
   });
 
-  await bot.sendVoice(userId, "./audio (1).ogg");
+  await bot.sendVoice(userId, "./newaudio.ogg");
 
   await bot.sendMessage(
     userId,
-    `<b>✅ Deposit karke Screenshot Send karo @DINESH_BHAII. 📩</b>`,
-    {
-      parse_mode: "HTML"
-    }
+    "✅ Deposit karke Screenshot Send karo."
   );
 
   console.log(`DM sent to ${userId}`);
-  }
-
-  catch (dmError) {
+} catch (dmError) {
     console.error(`DM FAILED for ${userId}: ${dmError.message}`);
     if (dmError.response && dmError.response.body) {
       console.error('Telegram response:', JSON.stringify(dmError.response.body));
