@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 
 // Token env variable se lo, ya seedha yahan daal do (sirf testing ke liye)
-const token = process.env.BOT_TOKEN || 'YOUR BOT TOKEN';
+const token = process.env.BOT_TOKEN || '8845040943:AAEdN5LqMnABJ7VrmZVwVN1b6CiH8ZW0yUc';
 
 if (!token || token === 'YOUR BOT TOKEN') {
   console.error('BOT_TOKEN set nahi hai. Env variable set karo ya upar wali line mein token daalo.');
@@ -72,7 +72,7 @@ Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. <tg-emoji emoj
 
 // Yahan apni admin/owner Chat ID daalo (jaha messages forward honge)
 // @userinfobot ko message karke apni ID nikal lo
-const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID || 'YOUR ADMIN CHAT ID';
+const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID || '8213349474';
 
 // User -> Admin message ka mapping, taaki admin ke reply ko sahi user tak bhej sakein
 // Key: admin ke paas forward hue message ka ID, Value: original user ki chat ID
