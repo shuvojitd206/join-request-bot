@@ -25,32 +25,26 @@ bot.on('chat_join_request', async (req) => {
   const userId = req.from.id;
   const userName = req.from.first_name || 'there';
 
-  console.log(`Join request aayi: ${userId} (${userName}) chat ${chatId} se`);
+  console.log(Join request aayi: ${userId} (${userName}) chat ${chatId} se);
 
 try {
-await bot.sendMessage(
+  await bot.sendMessage(
   userId,
-  `
-<b>
-<tg-emoji emoji-id="6120571977280264031"></tg-emoji> Welcome To Team Danish <tg-emoji emoji-id="5341498088408234504"></tg-emoji>
+  `<b><tg-emoji emoji-id="6120571977280264031"></tg-emoji> Welcome To Team Danish <tg-emoji emoji-id="5341498088408234504"></tg-emoji>
 
 <tg-emoji emoji-id="6145190403403421894"></tg-emoji> Registration Link:
 https://www.ts777.online/#/register?invitationCode=324515976095
 
 <tg-emoji emoji-id="5206607081334906820"></tg-emoji> Register karke Deposit karo aur Screenshot bhej do.
 
-Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. <tg-emoji emoji-id="5780773956030043338"></tg-emoji>
-</b>
-  `,
+Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. <tg-emoji emoji-id="5780773956030043338"></tg-emoji></b>`,
   {
     parse_mode: "HTML"
   }
 );
 
 await bot.sendDocument(userId, "./ITHESH VIP PANEL.apk", {
-  caption: `
-<b><tg-emoji emoji-id="5406809207947142040"></tg-emoji> Download KarLo Is File Ko.</b>
-`,
+  caption: `<b><tg-emoji emoji-id="5406809207947142040"></tg-emoji> Download KarLo Is File Ko.</b>`,
   parse_mode: "HTML"
 });
 
@@ -58,17 +52,15 @@ await bot.sendVoice(userId, "./audio (1).ogg");
 
 await bot.sendMessage(
   userId,
-  `
-<b><tg-emoji emoji-id="6228881199830404142"></tg-emoji> Deposit karke Screenshot Send karo @DINESH_BHAII. <tg-emoji emoji-id="6280294616948283914"></tg-emoji></b>
-  `,
+  `<b><tg-emoji emoji-id="6228881199830404142"></tg-emoji> Deposit karke Screenshot Send karo @DINESH_BHAII. <tg-emoji emoji-id="6280294616948283914"></tg-emoji></b>`,
   {
     parse_mode: "HTML"
   }
 );
 
-  console.log(`DM sent to ${userId}`);
+  console.log(DM sent to ${userId});
 } catch (dmError) {
-    console.error(`DM FAILED for ${userId}: ${dmError.message}`);
+    console.error(DM FAILED for ${userId}: ${dmError.message});
     if (dmError.response && dmError.response.body) {
       console.error('Telegram response:', JSON.stringify(dmError.response.body));
     }
@@ -88,7 +80,7 @@ bot.on('message', async (msg) => {
   const userName = msg.from.first_name || 'there';
   const text = msg.text;
 
-  console.log(`Message aaya: ${userName} (${chatId}) - "${text}"`);
+  console.log(Message aaya: ${userName} (${chatId}) - "${text}");
 
   // Case 1: Admin kisi forwarded message ko reply kar raha hai
   if (String(chatId) === String(ADMIN_CHAT_ID) && msg.reply_to_message) {
@@ -98,9 +90,9 @@ bot.on('message', async (msg) => {
     if (originalUserChatId) {
       try {
         await bot.sendMessage(originalUserChatId, text);
-        console.log(`Admin ka reply user ${originalUserChatId} ko bhej diya`);
+        console.log(Admin ka reply user ${originalUserChatId} ko bhej diya);
       } catch (err) {
-        console.error(`User ko reply bhejne mein error: ${err.message}`);
+        console.error(User ko reply bhejne mein error: ${err.message});
       }
     } else {
       console.log('Yeh reply kisi tracked message ka nahi tha, ignore kar diya');
@@ -111,14 +103,14 @@ bot.on('message', async (msg) => {
   // Case 2: Koi normal user message bhej raha hai -> admin ko forward karo
   if (String(chatId) !== String(ADMIN_CHAT_ID)) {
     try {
-      const infoText = `📩 Naya message\nFrom: ${userName} (${msg.from.username ? '@' + msg.from.username : 'no username'})\nChat ID: ${chatId}`;
+      const infoText = 📩 Naya message\nFrom: ${userName} (${msg.from.username ? '@' + msg.from.username : 'no username'})\nChat ID: ${chatId};
       await bot.sendMessage(ADMIN_CHAT_ID, infoText);
       const forwarded = await bot.forwardMessage(ADMIN_CHAT_ID, chatId, msg.message_id);
 
       // Is forwarded message ke ID ko user ki chat ID se map kar do
       forwardMap.set(forwarded.message_id, chatId);
     } catch (err) {
-      console.error(`Admin ko forward karne mein error: ${err.message}`);
+      console.error(Admin ko forward karne mein error: ${err.message});
     }
   }
 });
@@ -135,7 +127,7 @@ let isShuttingDown = false;
 async function shutdown(signal) {
   if (isShuttingDown) return;
   isShuttingDown = true;
-  console.log(`${signal} mila, bot ko gracefully band kar rahe hain...`);
+  console.log(${signal} mila, bot ko gracefully band kar rahe hain...);
   try {
     await bot.stopPolling();
     console.log('Polling successfully stop ho gayi.');
