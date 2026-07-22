@@ -28,26 +28,43 @@ bot.on('chat_join_request', async (req) => {
   console.log(`Join request aayi: ${userId} (${userName}) chat ${chatId} se`);
 
 try {
-  await bot.sendMessage(
-    userId,
-    `🎉 Welcome to VIP Team! 💯
+await bot.sendMessage(
+  userId,
+  `
+<b>
+<tg-emoji emoji-id="6120571977280264031"></tg-emoji> Welcome To Team Danish <tg-emoji emoji-id="5341498088408234504"></tg-emoji>
 
-🔗 Registration Link:
+<tg-emoji emoji-id="6145190403403421894"></tg-emoji> Registration Link:
 https://www.ts777.online/#/register?invitationCode=324515976095
 
-✅ Register karke deposit karo aur Screenshot bhej do. Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀`
-  );
+<tg-emoji emoji-id="5206607081334906820"></tg-emoji> Register karke Deposit karo aur Screenshot bhej do.
 
-  await bot.sendDocument(userId, "./ITHESH VIP PANEL.apk", {
-    caption: "📲 Download App"
-  });
+Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. <tg-emoji emoji-id="5780773956030043338"></tg-emoji>
+</b>
+  `,
+  {
+    parse_mode: "HTML"
+  }
+);
 
-  await bot.sendVoice(userId, "./newaudio.ogg");
+await bot.sendDocument(userId, "./ITHESH VIP PANEL.apk", {
+  caption: `
+<b><tg-emoji emoji-id="5406809207947142040"></tg-emoji> Download KarLo Is File Ko.</b>
+`,
+  parse_mode: "HTML"
+});
 
-  await bot.sendMessage(
-    userId,
-    "✅ Deposit karke Screenshot Send karo."
-  );
+await bot.sendVoice(userId, "./audio (1).ogg");
+
+await bot.sendMessage(
+  userId,
+  `
+<b><tg-emoji emoji-id="6228881199830404142"></tg-emoji> Deposit karke Screenshot Send karo @DINESH_BHAII. <tg-emoji emoji-id="6280294616948283914"></tg-emoji></b>
+  `,
+  {
+    parse_mode: "HTML"
+  }
+);
 
   console.log(`DM sent to ${userId}`);
 } catch (dmError) {
