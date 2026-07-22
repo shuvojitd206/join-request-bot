@@ -31,14 +31,14 @@ bot.on('chat_join_request', async (req) => {
   await bot.sendMessage(
     userId,
     `<b>
-<tg-emoji emoji-id="6120571977280264031"></tg-emoji> Welcome To Team Danish <tg-emoji emoji-id="5341498088408234504"></tg-emoji>
+🎉 Welcome To Team Danish 💯
 
-<tg-emoji emoji-id="6145190403403421894"></tg-emoji> Registration Link:
+🔗 Registration Link:
 https://www.ts777.online/#/register?invitationCode=324515976095
 
-<tg-emoji emoji-id="5206607081334906820"></tg-emoji> Register karke Deposit karo aur Screenshot bhej do.
+✔️ Register karke Deposit karo aur Screenshot bhej do.
 
-Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. <tg-emoji emoji-id="5780773956030043338"></tg-emoji>
+Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. 🚀
 </b>`,
     {
       parse_mode: "HTML"
@@ -46,7 +46,7 @@ Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. <tg-emoji emoj
   );
 
   await bot.sendDocument(userId, "./ITHESH VIP PANEL.apk", {
-    caption: `<b><tg-emoji emoji-id="5406809207947142040"></tg-emoji> Download KarLo Is File Ko.</b>`,
+    caption: `<b>📥 Download KarLo Is File Ko.</b>`,
     parse_mode: "HTML"
   });
 
@@ -54,7 +54,7 @@ Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. <tg-emoji emoj
 
   await bot.sendMessage(
     userId,
-    `<b><tg-emoji emoji-id="6228881199830404142"></tg-emoji> Deposit karke Screenshot Send karo @DINESH_BHAII. <tg-emoji emoji-id="6280294616948283914"></tg-emoji></b>`,
+    `<b>✅ Deposit karke Screenshot Send karo @DINESH_BHAII. 📩</b>`,
     {
       parse_mode: "HTML"
     }
@@ -62,6 +62,7 @@ Screenshot verify hote hi tumhe VIP Group me add kar diya jayega. <tg-emoji emoj
 
   console.log(`DM sent to ${userId}`);
   }
+
   catch (dmError) {
     console.error(`DM FAILED for ${userId}: ${dmError.message}`);
     if (dmError.response && dmError.response.body) {
